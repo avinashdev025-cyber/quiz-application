@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block title %}QuizPulse | Start Your Challenge{% endblock %}
+
+{% block content %}
+<section class="welcome-section glass-panel">
+    <div class="welcome-header">
+        <h1 class="glow-text">Ready to test your skills?</h1>
+        <p class="subtitle">Choose a category, set your difficulty level, and start the timer.</p>
+    </div>
+    
+    <form action="{{ url_for('quiz') }}" method="GET" class="quiz-setup-form" id="setup-form">
+        <!-- User Info Segment -->
+        <div class="form-group name-group">
+            <label for="user_name">
+                <i data-lucide="user" class="input-icon"></i> Player Name
+            </label>
+            <input type="text" id="user_name" name="user_name" placeholder="Enter your name to start..." required autocomplete="off" class="input-glow">
+        </div>
+        
+        <!-- Category Selection -->
+        <div class="form-group categories-group">
+            <label class="section-label">
+                <i data-lucide="layout-grid" class="input-icon"></i> Select Category
+            </label>
+            
+            <div class="categories-grid">
+                {% for cat in categories %}
+                <div class="category-card" onclick="selectCategory(this, {{ cat.id }})">
+                    <input type="radio" name="category_id" id="cat-{{ cat.id }}" value="{{ cat.id }}" required class="hidden-radio">
+                    <div class="category-card-content">
+                        <div class="category-icon-wrapper">
+                            <i data-lucide="{{ cat.icon }}"></i>
+                        </div>
+                        <h3 class="category-name">{{ cat.name }}</h3>
+                        <p class="category-desc">{{ cat.description }}</p>
+                        <span class="question-badge">
+                            <i data-lucide="help-circle"></i> {{ cat.question_count }} Questions
+                        </span>
+                    </div>
+                </div>
+                {% else %}
+                <div class="no-categories">
+                    <i data-lucide="alert-circle" class="warning-icon"></i>
+                    <p>No quiz categories found. Please add questions in the admin panel first!</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Difficulty Selection -->
+        <div class="form-group difficulty-group">
+            <label class="section-label">
+                <i data-lucide="sliders-horizontal" class="input-icon"></i> Select Difficulty
+            </label>
+            
+            <div class="difficulty-tabs">
+                <label class="diff-tab diff-easy" onclick="selectDifficulty('Easy')">
+                    <input type="radio" name="difficulty" value="Easy" checked class="hidden-radio">
+                    <span class="tab-label">
+                        <span class="dot"></span> Easy
+                    </span>
+                </label>
+                <label class="diff-tab diff-medium" onclick="selectDifficulty('Medium')">
+                    <input type="radio" name="difficulty" value="Medium" class="hidden-radio">
+                    <span class="tab-label">
+                        <span class="dot"></span> Medium
+                    </span>
+                </label>
+                <label class="diff-tab diff-hard" onclick="selectDifficulty('Hard')">
+                    <input type="radio" name="difficulty" value="Hard" class="hidden-radio">
+                    <span class="tab-label">
+                        <span class="dot"></span> Hard
+                    </span>
+                </label>
+            </div>
+        </div>
+        
+        <!-- Submit Action -->
+        <div class="form-submit">
+            <button type="submit" class="btn btn-primary btn-large btn-glow pulse-btn">
+                <span>Start Challenge</span> <i data-lucide="arrow-right"></i>
+            </button>
+        </div>
+    </form>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Load previously used username if present
+    document.addEventListener("DOMContentLoaded", () => {
+        const savedName = localStorage.getItem('player_name');
+        if (savedName) {
+            document.getElementById('user_name').value = savedName;
+        }
+        
+        // Auto-select first category if available
+        const firstCard = document.querySelector('.category-card');
+        if (firstCard) {
+            firstCard.click();
+        }
+    });
+
+    // Form submission listener to cache player name
+    document.getElementById('setup-form').addEventListener('submit', (e) => {
+        const nameVal = document.getElementById('user_name').value.strip();
+        if (nameVal) {
+            localStorage.setItem('player_name', nameVal);
+        }
+    });
+
+    // Custom Category selection handler
+    function selectCategory(card, categoryId) {
+        // Deselect all cards
+        document.querySelectorAll('.category-card').forEach(c => {
+            c.classList.remove('selected');
+        });
+        
+        // Select current card
+        card.classList.add('selected');
+        
+        // Check corresponding radio button
+        const radio = document.getElementById(`cat-${categoryId}`);
+        if (radio) {
+            radio.checked = true;
+        }
+    }
+
+    // Custom Difficulty selection handler
+    function selectDifficulty(diff) {
+        // Toggle selected styling by triggering classes on container or tabs
+        document.querySelectorAll('.diff-tab').forEach(t => {
+            const radio = t.querySelector('input');
+            if (radio.value === diff) {
+                t.classList.add('active');
+                radio.checked = true;
+            } else {
+                t.classList.remove('active');
+            }
+        });
+    }
+    
+    // Trigger initial difficulty setup
+    selectDifficulty('Easy');
+</script>
+{% endblock %}

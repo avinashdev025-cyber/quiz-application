@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}QuizPulse | Playing Quiz{% endblock %}
+
+{% block content %}
+<div class="quiz-container-wrapper">
+    <!-- Loader Overlay -->
+    <div id="quiz-loader" class="quiz-overlay">
+        <div class="loader-content">
+            <div class="spinner"></div>
+            <p>Gathering your questions...</p>
+        </div>
+    </div>
+
+    <!-- Empty/Error State -->
+    <div id="quiz-error" class="quiz-overlay hidden">
+        <div class="error-content glass-panel">
+            <i data-lucide="alert-triangle" class="error-icon"></i>
+            <h2>No Questions Found</h2>
+            <p>We couldn't find any questions matching your category and difficulty. You can add some in the Admin panel or try a different combination.</p>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary mt-4">
+                <i data-lucide="arrow-left"></i> Return Home
+            </a>
+        </div>
+    </div>
+
+    <!-- Active Quiz Layout -->
+    <div id="quiz-active-layout" class="hidden">
+        <!-- Top Stats Bar -->
+        <div class="quiz-meta-header glass-panel">
+            <div class="meta-left">
+                <a href="{{ url_for('index') }}" class="btn-quit" onclick="return confirm('Are you sure you want to quit? Your progress will be lost.')" title="Exit Quiz">
+                    <i data-lucide="x"></i>
+                </a>
+                <div class="quiz-info-titles">
+                    <h2 class="quiz-title">{{ category.name }}</h2>
+                    <span class="quiz-badge-diff {{ difficulty|lower }}">{{ difficulty }}</span>
+                </div>
+            </div>
+            
+            <div class="meta-right">
+                <!-- Circular Countdown Timer -->
+                <div class="timer-widget">
+                    <svg class="timer-svg" viewBox="0 0 80 80">
+                        <circle class="timer-track" cx="40" cy="40" r="34"></circle>
+                        <circle class="timer-progress" id="timer-bar" cx="40" cy="40" r="34"></circle>
+                    </svg>
+                    <span class="timer-text" id="timer-countdown">15</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Horizontal Progress Indicator -->
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progress-fill" style="width: 0%;"></div>
+            <div class="progress-bar-details">
+                <span class="progress-text" id="progress-text">Question 0 of 0</span>
+                <span class="score-tracker" id="score-tracker">Score: 0</span>
+            </div>
+        </div>
+
+        <!-- Question Card -->
+        <div class="question-card glass-panel" id="question-card">
+            <h3 class="question-text" id="question-body">Question text will load here...</h3>
+            
+            <div class="options-list" id="options-container">
+                <!-- Options buttons are dynamically appended here -->
+            </div>
+        </div>
+
+        <!-- Bottom Action Panels (Explanation & Next buttons) -->
+        <div class="quiz-footer-actions">
+            <!-- Explanation Drawer -->
+            <div class="explanation-drawer glass-panel hidden" id="explanation-drawer">
+                <div class="drawer-header">
+                    <i data-lucide="lightbulb" class="bulb-icon"></i>
+                    <h4>Explanation</h4>
+                </div>
+                <p id="explanation-body">Explanation text goes here...</p>
+            </div>
+            
+            <!-- Navigation Button -->
+            <div class="nav-actions">
+                <button id="btn-next" class="btn btn-primary btn-large hidden">
+                    <span id="next-btn-label">Next Question</span>
+                    <span id="next-btn-icon-container"><i data-lucide="arrow-right"></i></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Expose parameters safely to the external script -->
+<script>
+    window.QUIZ_CONFIG = {
+        userName: {{ (user_name if user_name else 'Anonymous') | tojson }},
+        categoryId: parseInt("{{ category.id }}"),
+        difficulty: "{{ difficulty }}",
+        questionsApiUrl: "{{ url_for('get_questions') }}",
+        submitApiUrl: "{{ url_for('submit_attempt') }}",
+        redirectUrl: "{{ url_for('result', attempt_id=0) }}"
+    };
+</script>
+<script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
+{% endblock %}

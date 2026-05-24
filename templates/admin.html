@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+
+{% block title %}QuizPulse | Control Panel{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="admin-header mb-5">
+        <h1 class="glow-text"><i data-lucide="shield-check"></i> System Administrator</h1>
+        <p class="subtitle">Monitor usage statistics, append custom questions, and clean quiz databases.</p>
+    </div>
+
+    <!-- Stats Dashboard Cards -->
+    <div class="stats-grid mb-5">
+        <div class="stat-card glass-panel">
+            <div class="stat-icon-wrapper blue-glow">
+                <i data-lucide="bar-chart-3"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-val">{{ total_attempts }}</span>
+                <span class="stat-lbl">Total Attempts</span>
+            </div>
+        </div>
+        <div class="stat-card glass-panel">
+            <div class="stat-icon-wrapper green-glow">
+                <i data-lucide="percent"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-val">{{ avg_score }}%</span>
+                <span class="stat-lbl">Average Score</span>
+            </div>
+        </div>
+        <div class="stat-card glass-panel">
+            <div class="stat-icon-wrapper purple-glow">
+                <i data-lucide="help-circle"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-val">{{ questions|length }}</span>
+                <span class="stat-lbl">Active Questions</span>
+            </div>
+        </div>
+        <div class="stat-card glass-panel">
+            <div class="stat-icon-wrapper yellow-glow">
+                <i data-lucide="tag"></i>
+            </div>
+            <div class="stat-info">
+                <span class="stat-val">{{ categories|length }}</span>
+                <span class="stat-lbl">Categories</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Two-Column Work Area -->
+    <div class="admin-workspace-grid">
+        
+        <!-- Left Side: Add Question Form -->
+        <div class="admin-form-panel glass-panel">
+            <h2 class="panel-title"><i data-lucide="plus-circle"></i> Add New Question</h2>
+            
+            <form action="{{ url_for('add_question') }}" method="POST" class="admin-form">
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="category_id">Category</label>
+                        <select name="category_id" id="category_id" required>
+                            {% for cat in categories %}
+                                <option value="{{ cat.id }}">{{ cat.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="difficulty">Difficulty</label>
+                        <select name="difficulty" id="difficulty" required>
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="question_text">Question Text</label>
+                    <textarea name="question_text" id="question_text" rows="3" placeholder="Type the question statement here..." required></textarea>
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="option_a">Option A</label>
+                        <input type="text" name="option_a" id="option_a" placeholder="Option A text..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="option_b">Option B</label>
+                        <input type="text" name="option_b" id="option_b" placeholder="Option B text..." required>
+                    </div>
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="option_c">Option C</label>
+                        <input type="text" name="option_c" id="option_c" placeholder="Option C text..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="option_d">Option D</label>
+                        <input type="text" name="option_d" id="option_d" placeholder="Option D text..." required>
+                    </div>
+                </div>
+
+                <div class="form-row-2">
+                    <div class="form-group">
+                        <label for="correct_answer">Correct Answer</label>
+                        <select name="correct_answer" id="correct_answer" required>
+                            <option value="A">Option A</option>
+                            <option value="B">Option B</option>
+                            <option value="C">Option C</option>
+                            <option value="D">Option D</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="explanation">Explanation (Optional)</label>
+                    <textarea name="explanation" id="explanation" rows="2" placeholder="Why is this the correct answer? Provide logic to help students learn..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full mt-3">
+                    <i data-lucide="plus"></i> Add Question
+                </button>
+            </form>
+        </div>
+
+        <!-- Right Side: Questions Database Grid -->
+        <div class="admin-data-panel glass-panel">
+            <div class="data-panel-header">
+                <h2 class="panel-title"><i data-lucide="database"></i> Question Bank</h2>
+                
+                <!-- Table Search & Filters -->
+                <div class="data-filters">
+                    <input type="text" id="admin-search" placeholder="Search questions..." onkeyup="filterQuestions()">
+                    <select id="admin-cat-filter" onchange="filterQuestions()">
+                        <option value="all">All Categories</option>
+                        {% for cat in categories %}
+                            <option value="{{ cat.name }}">{{ cat.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <!-- Scrollable Table -->
+            <div class="admin-table-container">
+                <table class="admin-table" id="admin-questions-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%">Category</th>
+                            <th style="width: 15%">Diff</th>
+                            <th style="width: 50%">Question Statement</th>
+                            <th style="width: 10%" class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for q in questions %}
+                        <tr class="question-data-row">
+                            <td class="q-cat-cell">{{ q.category.name }}</td>
+                            <td><span class="badge-diff {{ q.difficulty|lower }}">{{ q.difficulty }}</span></td>
+                            <td class="q-text-cell font-semibold" title="{{ q.question_text }}">{{ q.question_text }}</td>
+                            <td class="text-center">
+                                <form action="{{ url_for('delete_question', question_id=q.id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this question?');">
+                                    <button type="submit" class="btn-delete" title="Delete Question">
+                                        <i data-lucide="trash-2"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center py-4">No questions found in database.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Live filter of database questions
+    function filterQuestions() {
+        const searchInput = document.getElementById("admin-search");
+        const searchText = searchInput.value.toLowerCase().trim();
+        
+        const catFilter = document.getElementById("admin-cat-filter");
+        const selectedCat = catFilter.value.toLowerCase();
+        
+        const table = document.getElementById("admin-questions-table");
+        const rows = table.getElementsByClassName("question-data-row");
+        
+        for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            const catCell = row.getElementsByClassName("q-cat-cell")[0];
+            const textCell = row.getElementsByClassName("q-text-cell")[0];
+            
+            if (catCell && textCell) {
+                const catName = catCell.textContent || catCell.innerText;
+                const questionText = textCell.textContent || textCell.innerText;
+                
+                const matchesSearch = questionText.toLowerCase().includes(searchText);
+                const matchesCategory = (selectedCat === "all") || (catName.toLowerCase() === selectedCat);
+                
+                if (matchesSearch && matchesCategory) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+{% endblock %}

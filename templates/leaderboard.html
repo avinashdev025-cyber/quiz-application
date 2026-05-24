@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}QuizPulse | Global Leaderboard{% endblock %}
+
+{% block content %}
+<section class="leaderboard-section">
+    <div class="leaderboard-header text-center mb-5">
+        <div class="trophy-glow">
+            <i data-lucide="trophy" class="leaderboard-trophy-icon"></i>
+        </div>
+        <h1 class="glow-text">Global Standings</h1>
+        <p class="subtitle">Check out the top performances and compete for the highest score!</p>
+    </div>
+
+    <!-- Search & Filter Controls -->
+    <div class="table-controls glass-panel mb-4">
+        <div class="search-box">
+            <i data-lucide="search" class="search-icon"></i>
+            <input type="text" id="leaderboard-search" placeholder="Search by player name..." onkeyup="filterLeaderboard()">
+        </div>
+        <div class="filter-indicators">
+            <span class="active-attempts-count"><i data-lucide="users"></i> <span id="record-count">{{ attempts|length }}</span> Attempts Recorded</span>
+        </div>
+    </div>
+
+    <!-- Leaderboard Table -->
+    <div class="table-wrapper glass-panel">
+        <table class="leaderboard-table" id="leaderboard-table">
+            <thead>
+                <tr>
+                    <th style="width: 10%">Rank</th>
+                    <th style="width: 25%">Player</th>
+                    <th style="width: 20%">Category</th>
+                    <th style="width: 15%">Difficulty</th>
+                    <th style="width: 15%">Score</th>
+                    <th style="width: 15%">Time Spent</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for attempt in attempts %}
+                <tr class="leaderboard-row">
+                    <!-- Rank Indicator -->
+                    <td class="rank-col">
+                        {% if loop.index == 1 %}
+                            <span class="rank-badge rank-1" title="1st Place"><i data-lucide="crown"></i></span>
+                        {% elif loop.index == 2 %}
+                            <span class="rank-badge rank-2" title="2nd Place">2</span>
+                        {% elif loop.index == 3 %}
+                            <span class="rank-badge rank-3" title="3rd Place">3</span>
+                        {% else %}
+                            <span class="rank-number">{{ loop.index }}</span>
+                        {% endif %}
+                    </td>
+                    
+                    <!-- Player Name -->
+                    <td class="player-col font-semibold">{{ attempt.user_name }}</td>
+                    
+                    <!-- Category Name -->
+                    <td>{{ attempt.category_name }}</td>
+                    
+                    <!-- Difficulty Level -->
+                    <td>
+                        <span class="badge-diff {{ attempt.difficulty|lower }}">{{ attempt.difficulty }}</span>
+                    </td>
+                    
+                    <!-- Score Details -->
+                    <td class="score-col">
+                        <div class="score-detail">
+                            <span class="score-percent-cell">{{ attempt.percentage|round|int }}%</span>
+                            <span class="score-fraction-cell">({{ attempt.score }}/{{ attempt.total_questions }})</span>
+                        </div>
+                    </td>
+                    
+                    <!-- Completion Time -->
+                    <td class="time-col" data-seconds="{{ attempt.time_taken }}">
+                        <!-- Formatted dynamically in script -->
+                        <span class="time-spent-text">--</span>
+                    </td>
+                </tr>
+                {% else %}
+                <tr class="empty-row">
+                    <td colspan="6" class="text-center py-5">
+                        <div class="empty-state">
+                            <i data-lucide="info" class="empty-icon"></i>
+                            <p>No attempts recorded yet. Be the first to establish a high score!</p>
+                            <a href="{{ url_for('index') }}" class="btn btn-primary mt-3">Start Quiz</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Format all leaderboard times
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".time-col").forEach(td => {
+            const seconds = parseInt(td.getAttribute("data-seconds"));
+            if (!isNaN(seconds)) {
+                const m = Math.floor(seconds / 60);
+                const s = seconds % 60;
+                const formatted = m > 0 ? `${m}m ${s}s` : `${s}s`;
+                td.querySelector(".time-spent-text").textContent = formatted;
+            }
+        });
+    });
+
+    // Real-time local filtering of rows
+    function filterLeaderboard() {
+        const searchInput = document.getElementById("leaderboard-search");
+        const filter = searchInput.value.toLowerCase().trim();
+        const table = document.getElementById("leaderboard-table");
+        const trs = table.getElementsByClassName("leaderboard-row");
+        
+        let visibleCount = 0;
+        
+        for (let i = 0; i < trs.length; i++) {
+            const playerCell = trs[i].getElementsByClassName("player-col")[0];
+            if (playerCell) {
+                const playerName = playerCell.textContent || playerCell.innerText;
+                if (playerName.toLowerCase().indexOf(filter) > -1) {
+                    trs[i].style.display = "";
+                    visibleCount++;
+                } else {
+                    trs[i].style.display = "none";
+                }
+            }
+        }
+        
+        // Update records indicator
+        document.getElementById("record-count").textContent = visibleCount;
+    }
+</script>
+{% endblock %}

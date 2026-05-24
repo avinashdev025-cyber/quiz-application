@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+
+{% block title %}QuizPulse | Quiz Results{% endblock %}
+
+{% block content %}
+<section class="result-section">
+    <!-- Main Score Card -->
+    <div class="result-card glass-panel text-center">
+        <h1 class="glow-text">Quiz Completed!</h1>
+        
+        <!-- Score Circular Ring -->
+        <div class="score-ring-container">
+            <svg class="score-svg" viewBox="0 0 160 160">
+                <circle class="score-track" cx="80" cy="80" r="70"></circle>
+                <circle class="score-progress" id="result-score-bar" cx="80" cy="80" r="70" 
+                        style="stroke-dasharray: 440; stroke-dashoffset: {{ 440 - (440 * attempt.percentage / 100) }}"></circle>
+            </svg>
+            <div class="score-content">
+                <span class="score-percent">{{ attempt.percentage|round|int }}%</span>
+                <span class="score-fraction">{{ attempt.score }} / {{ attempt.total_questions }} Correct</span>
+            </div>
+        </div>
+        
+        <!-- Personalized Feedback Message -->
+        <div class="feedback-message">
+            {% if attempt.percentage >= 90 %}
+                <h2 class="feedback-title success-color">Outstanding! You're an expert!</h2>
+                <p>You displayed deep understanding of the concepts. Outstanding score!</p>
+            {% elif attempt.percentage >= 70 %}
+                <h2 class="feedback-title info-color">Great Job! Excellent effort!</h2>
+                <p>You have a solid grasp on this material. Keep it up!</p>
+            {% elif attempt.percentage >= 50 %}
+                <h2 class="feedback-title warning-color">Good Attempt!</h2>
+                <p>You did well, but there is room for improvement. Take a look at the explanations below.</p>
+            {% else %}
+                <h2 class="feedback-title danger-color">Keep Learning!</h2>
+                <p>Don't be discouraged! Review the correct answers below and try again to improve your score.</p>
+            {% endif %}
+        </div>
+        
+        <!-- Score Metrics Grid -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <span class="metric-label"><i data-lucide="tag"></i> Category</span>
+                <span class="metric-value">{{ attempt.category_name }}</span>
+            </div>
+            <div class="metric-card">
+                <span class="metric-label"><i data-lucide="sliders"></i> Difficulty</span>
+                <span class="metric-value badge-diff {{ attempt.difficulty|lower }}">{{ attempt.difficulty }}</span>
+            </div>
+            <div class="metric-card">
+                <span class="metric-label"><i data-lucide="clock"></i> Time Taken</span>
+                <span class="metric-value" id="formatted-time">{{ attempt.time_taken }}s</span>
+            </div>
+            <div class="metric-card">
+                <span class="metric-label"><i data-lucide="calendar"></i> Date Played</span>
+                <span class="metric-value">{{ attempt.timestamp.strftime('%d %b %Y, %H:%M') }}</span>
+            </div>
+        </div>
+        
+        <!-- Quick Navigation -->
+        <div class="result-actions">
+            <a href="{{ url_for('index') }}" class="btn btn-primary btn-glow">
+                <i data-lucide="rotate-ccw"></i> Try Another Quiz
+            </a>
+            <a href="{{ url_for('leaderboard') }}" class="btn btn-secondary">
+                <i data-lucide="trophy"></i> View Leaderboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Detailed Question Review Accordion -->
+    <div class="review-section mt-5">
+        <h2 class="section-title"><i data-lucide="clipboard-list"></i> Question Review</h2>
+        <p class="subtitle mb-4">Review the answers you selected and see detailed explanations for each question.</p>
+        
+        <div class="review-list">
+            {% for ans in answers %}
+            {% set q = ans.question %}
+            <div class="review-item glass-panel {% if ans.selected_answer == q.correct_answer %}review-correct{% elif not ans.selected_answer %}review-skipped{% else %}review-incorrect{% endif %}">
+                
+                <!-- Review Item Header -->
+                <div class="review-header" onclick="toggleReviewItem(this)">
+                    <div class="review-header-left">
+                        <span class="status-icon-wrapper">
+                            {% if ans.selected_answer == q.correct_answer %}
+                                <i data-lucide="check" class="success-color"></i>
+                            {% elif not ans.selected_answer %}
+                                <i data-lucide="minus" class="muted-color"></i>
+                            {% else %}
+                                <i data-lucide="x" class="danger-color"></i>
+                            {% endif %}
+                        </span>
+                        <span class="review-question-title">Question {{ loop.index }}: {{ q.question_text }}</span>
+                    </div>
+                    <span class="chevron-icon">
+                        <i data-lucide="chevron-down"></i>
+                    </span>
+                </div>
+                
+                <!-- Review Item Body (Hidden by default, toggled via JS) -->
+                <div class="review-body hidden">
+                    <div class="options-review-grid">
+                        
+                        <!-- Option A -->
+                        <div class="option-review-card 
+                            {% if q.correct_answer == 'A' %}correct-choice{% endif %}
+                            {% if ans.selected_answer == 'A' and q.correct_answer != 'A' %}incorrect-choice{% endif %}
+                            {% if ans.selected_answer == 'A' %}user-selected-choice{% endif %}">
+                            <span class="option-letter">A</span>
+                            <span class="option-text">{{ q.option_a }}</span>
+                            <span class="choice-tag">
+                                {% if q.correct_answer == 'A' %}<i data-lucide="check" class="inline-icon"></i> Correct{% endif %}
+                                {% if ans.selected_answer == 'A' and q.correct_answer != 'A' %}<i data-lucide="x" class="inline-icon"></i> Selected{% endif %}
+                                {% if ans.selected_answer == 'A' and q.correct_answer == 'A' %}<i data-lucide="check-circle" class="inline-icon"></i> Selected Correct{% endif %}
+                            </span>
+                        </div>
+
+                        <!-- Option B -->
+                        <div class="option-review-card 
+                            {% if q.correct_answer == 'B' %}correct-choice{% endif %}
+                            {% if ans.selected_answer == 'B' and q.correct_answer != 'B' %}incorrect-choice{% endif %}
+                            {% if ans.selected_answer == 'B' %}user-selected-choice{% endif %}">
+                            <span class="option-letter">B</span>
+                            <span class="option-text">{{ q.option_b }}</span>
+                            <span class="choice-tag">
+                                {% if q.correct_answer == 'B' %}<i data-lucide="check" class="inline-icon"></i> Correct{% endif %}
+                                {% if ans.selected_answer == 'B' and q.correct_answer != 'B' %}<i data-lucide="x" class="inline-icon"></i> Selected{% endif %}
+                                {% if ans.selected_answer == 'B' and q.correct_answer == 'B' %}<i data-lucide="check-circle" class="inline-icon"></i> Selected Correct{% endif %}
+                            </span>
+                        </div>
+
+                        <!-- Option C -->
+                        <div class="option-review-card 
+                            {% if q.correct_answer == 'C' %}correct-choice{% endif %}
+                            {% if ans.selected_answer == 'C' and q.correct_answer != 'C' %}incorrect-choice{% endif %}
+                            {% if ans.selected_answer == 'C' %}user-selected-choice{% endif %}">
+                            <span class="option-letter">C</span>
+                            <span class="option-text">{{ q.option_c }}</span>
+                            <span class="choice-tag">
+                                {% if q.correct_answer == 'C' %}<i data-lucide="check" class="inline-icon"></i> Correct{% endif %}
+                                {% if ans.selected_answer == 'C' and q.correct_answer != 'C' %}<i data-lucide="x" class="inline-icon"></i> Selected{% endif %}
+                                {% if ans.selected_answer == 'C' and q.correct_answer == 'C' %}<i data-lucide="check-circle" class="inline-icon"></i> Selected Correct{% endif %}
+                            </span>
+                        </div>
+
+                        <!-- Option D -->
+                        <div class="option-review-card 
+                            {% if q.correct_answer == 'D' %}correct-choice{% endif %}
+                            {% if ans.selected_answer == 'D' and q.correct_answer != 'D' %}incorrect-choice{% endif %}
+                            {% if ans.selected_answer == 'D' %}user-selected-choice{% endif %}">
+                            <span class="option-letter">D</span>
+                            <span class="option-text">{{ q.option_d }}</span>
+                            <span class="choice-tag">
+                                {% if q.correct_answer == 'D' %}<i data-lucide="check" class="inline-icon"></i> Correct{% endif %}
+                                {% if ans.selected_answer == 'D' and q.correct_answer != 'D' %}<i data-lucide="x" class="inline-icon"></i> Selected{% endif %}
+                                {% if ans.selected_answer == 'D' and q.correct_answer == 'D' %}<i data-lucide="check-circle" class="inline-icon"></i> Selected Correct{% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Explanation Card -->
+                    {% if q.explanation %}
+                    <div class="review-explanation-card">
+                        <div class="explanation-title">
+                            <i data-lucide="lightbulb" class="bulb-icon"></i>
+                            <h5>Explanation</h5>
+                        </div>
+                        <p>{{ q.explanation }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Format the time taken into a human-readable string: MM:SS
+    document.addEventListener("DOMContentLoaded", () => {
+        const timeElement = document.getElementById("formatted-time");
+        const totalSeconds = parseInt("{{ attempt.time_taken }}");
+        
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        
+        let formatted = "";
+        if (minutes > 0) {
+            formatted += `${minutes}m `;
+        }
+        formatted += `${seconds}s`;
+        
+        timeElement.textContent = formatted;
+    });
+
+    // Accordion Toggle function
+    function toggleReviewItem(header) {
+        const reviewItem = header.parentElement;
+        const reviewBody = reviewItem.querySelector('.review-body');
+        const chevron = reviewItem.querySelector('.chevron-icon i');
+        
+        const isHidden = reviewBody.classList.contains('hidden');
+        
+        if (isHidden) {
+            reviewBody.classList.remove('hidden');
+            reviewItem.classList.add('expanded');
+            chevron.setAttribute('data-lucide', 'chevron-up');
+        } else {
+            reviewBody.classList.add('hidden');
+            reviewItem.classList.remove('expanded');
+            chevron.setAttribute('data-lucide', 'chevron-down');
+        }
+        
+        // Refresh icons within the modified header
+        lucide.createIcons();
+    }
+</script>
+{% endblock %}
