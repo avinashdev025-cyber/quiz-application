@@ -44,311 +44,192 @@ def seed_database():
             categories[existing.name] = existing
             print(f"Category already exists: {existing.name}")
 
-    # 2. Add Questions
-    questions_data = [
-        # --- PYTHON PROGRAMMING ---
-        {
-            "category": "Python Programming",
-            "difficulty": "Easy",
-            "question_text": "What is the output of print(2 ** 3) in Python?",
-            "option_a": "6",
-            "option_b": "8",
-            "option_c": "9",
-            "option_d": "5",
-            "correct_answer": "B",
-            "explanation": "The ** operator in Python represents exponentiation (power). Thus, 2 ** 3 represents 2 raised to the power of 3, which is 2 * 2 * 2 = 8."
-        },
-        {
-            "category": "Python Programming",
-            "difficulty": "Easy",
-            "question_text": "Which of the following is an immutable data type in Python?",
-            "option_a": "List",
-            "option_b": "Dictionary",
-            "option_c": "Tuple",
-            "option_d": "Set",
-            "correct_answer": "C",
-            "explanation": "A Tuple is immutable, meaning its elements cannot be altered, added, or deleted once created. Lists, Dictionaries, and Sets are mutable."
-        },
-        {
-            "category": "Python Programming",
-            "difficulty": "Medium",
-            "question_text": "What does the __init__ method do in a Python class?",
-            "option_a": "It deletes an instance of the class.",
-            "option_b": "It initializes a class class-level variable.",
-            "option_c": "It acts as a constructor to initialize a newly created object's state.",
-            "option_d": "It imports the module defining the class.",
-            "correct_answer": "C",
-            "explanation": "The __init__ method is a special method (dunder method) in Python classes that acts as a constructor. It runs automatically when a new instance of the class is created, allowing you to set up initial attributes."
-        },
-        {
-            "category": "Python Programming",
-            "difficulty": "Medium",
-            "question_text": "Which list comprehension correctly filters even numbers from range(10)?",
-            "option_a": "[x if x % 2 == 0 for x in range(10)]",
-            "option_b": "[x for x in range(10) if x % 2 == 0]",
-            "option_c": "[x for x % 2 == 0 in range(10)]",
-            "option_d": "[if x % 2 == 0: x for x in range(10)]",
-            "correct_answer": "B",
-            "explanation": "The standard syntax for a list comprehension with a simple filter is [expression for item in iterable if condition]. Therefore, [x for x in range(10) if x % 2 == 0] is correct."
-        },
-        {
-            "category": "Python Programming",
-            "difficulty": "Hard",
-            "question_text": "What is a generator in Python, and how is it defined?",
-            "option_a": "A generator is a module that creates random numbers, defined using the random keyword.",
-            "option_b": "A generator is a function that returns an iterator using the 'yield' keyword to produce values lazily.",
-            "option_c": "A generator is a system-level process that runs Python scripts concurrently.",
-            "option_d": "A generator is another name for a lambda function.",
-            "correct_answer": "B",
-            "explanation": "Generators are functions that return an iterator object, yielding items one at a time on demand. They are defined like normal functions but use the 'yield' keyword instead of 'return' to preserve state between calls, conserving memory."
-        },
-        {
-            "category": "Python Programming",
-            "difficulty": "Hard",
-            "question_text": "What is the purpose of 'self' in Python class methods?",
-            "option_a": "It is a keyword that refers to the class itself, similar to 'cls'.",
-            "option_b": "It refers to the current instance of the class, allowing access to instance attributes and methods.",
-            "option_c": "It is a security mechanism that prevents private variable modification.",
-            "option_d": "It calls the parent class constructor.",
-            "correct_answer": "B",
-            "explanation": "By convention, 'self' is the first parameter of any instance method in a Python class. It refers to the specific object instance that called the method, enabling access to instance-specific attributes and other methods."
-        },
+    # 2. Add Questions (Format: (Category, Difficulty, Question Text, Opt A, Opt B, Opt C, Opt D, Correct Opt, Explanation))
+    raw_questions = [
+        # ==========================================
+        # PYTHON PROGRAMMING
+        # ==========================================
+        # Easy (10 Questions)
+        ("Python Programming", "Easy", "What is the output of print(2 ** 3) in Python?", "6", "8", "9", "5", "B", "The ** operator represents exponentiation (power). Thus, 2 ** 3 is 2 * 2 * 2 = 8."),
+        ("Python Programming", "Easy", "Which of the following is an immutable data type in Python?", "List", "Dictionary", "Tuple", "Set", "C", "A Tuple is immutable, meaning its elements cannot be altered, added, or deleted once created. Lists, Dictionaries, and Sets are mutable."),
+        ("Python Programming", "Easy", "Which character is used to write comments in Python?", "//", "/*", "#", "--", "C", "In Python, the hash character (#) is used to initiate a single-line comment."),
+        ("Python Programming", "Easy", "Which keyword is used to create a function in Python?", "func", "define", "def", "function", "C", "The 'def' keyword is used to declare a function in Python."),
+        ("Python Programming", "Easy", "Which function is used to convert a string to an integer in Python?", "int()", "str()", "float()", "parse()", "A", "The 'int()' function casts a value to an integer, whereas 'str()' casts to a string and 'float()' casts to a floating-point number."),
+        ("Python Programming", "Easy", "How do you find the length of a list 'x' in Python?", "x.length()", "len(x)", "size(x)", "x.size()", "B", "The built-in 'len()' function returns the number of items in an object, including lists, tuples, dictionaries, and strings."),
+        ("Python Programming", "Easy", "Which logical operator returns True only if both operands are True?", "or", "and", "not", "xor", "B", "The 'and' operator returns True if and only if both conditions on its left and right sides evaluate to True."),
+        ("Python Programming", "Easy", "Which of the following is a boolean value in Python?", "true", "True", "\"True\"", "1", "B", "Python is case-sensitive; the standard boolean constants are 'True' and 'False' (capitalized)."),
+        ("Python Programming", "Easy", "How do you create an empty dictionary in Python?", "dict = []", "dict = ()", "dict = {}", "dict = set()", "C", "Empty curly braces {} are used to create an empty dictionary. Set creation requires calling set()."),
+        ("Python Programming", "Easy", "Which function is used to display output on the screen in Python?", "display()", "echo()", "write()", "print()", "D", "The built-in 'print()' function sends output to the standard output device (the screen)."),
 
-        # --- DATA STRUCTURES ---
-        {
-            "category": "Data Structures",
-            "difficulty": "Easy",
-            "question_text": "What is the time complexity of accessing an element in an array by its index?",
-            "option_a": "O(N)",
-            "option_b": "O(log N)",
-            "option_c": "O(1)",
-            "option_d": "O(N log N)",
-            "correct_answer": "C",
-            "explanation": "Since array elements are stored in contiguous memory locations, the address of any element can be computed in constant time using its index and the base address. Therefore, the access time complexity is O(1)."
-        },
-        {
-            "category": "Data Structures",
-            "difficulty": "Easy",
-            "question_text": "Which data structure operates on a Last-In-First-Out (LIFO) basis?",
-            "option_a": "Queue",
-            "option_b": "Stack",
-            "option_c": "Linked List",
-            "option_d": "Binary Tree",
-            "correct_answer": "B",
-            "explanation": "A Stack operates on a Last-In-First-Out (LIFO) principle, where the last element added is the first one to be removed. In contrast, a Queue operates on a First-In-First-Out (FIFO) basis."
-        },
-        {
-            "category": "Data Structures",
-            "difficulty": "Medium",
-            "question_text": "In a Binary Search Tree (BST), what is the worst-case time complexity for searching an element?",
-            "option_a": "O(1)",
-            "option_b": "O(log N)",
-            "option_c": "O(N)",
-            "option_d": "O(N log N)",
-            "correct_answer": "C",
-            "explanation": "In the worst case (when the tree is skewed or degenerate, behaving like a linked list), you may have to traverse all N nodes. The worst-case search complexity is O(N). In a balanced BST, the search complexity is O(log N)."
-        },
-        {
-            "category": "Data Structures",
-            "difficulty": "Medium",
-            "question_text": "Which data structure is typically used to implement Breadth-First Search (BFS) in a graph?",
-            "option_a": "Stack",
-            "option_b": "Queue",
-            "option_c": "Min-Heap",
-            "option_d": "Hash Table",
-            "correct_answer": "B",
-            "explanation": "BFS explores nodes level-by-level. A Queue is used to store and process vertices in FIFO order, ensuring that nodes closer to the starting node are visited before those further away. DFS (Depth-First Search) typically uses a Stack."
-        },
-        {
-            "category": "Data Structures",
-            "difficulty": "Hard",
-            "question_text": "What is a hash collision in a Hash Table?",
-            "option_a": "When the hash function fails to compute a value and throws an exception.",
-            "option_b": "When two distinct keys produce the same hash value, mapping them to the same index.",
-            "option_c": "When the table runs out of memory and crashes.",
-            "option_d": "When keys are deleted, leaving empty memory slots.",
-            "correct_answer": "B",
-            "explanation": "A hash collision occurs when two different keys produce the same integer index after being processed by a hash function. Collision resolution techniques include Chaining (linked lists at each slot) and Open Addressing (probing)."
-        },
-        {
-            "category": "Data Structures",
-            "difficulty": "Hard",
-            "question_text": "What is a balanced binary tree, and why is it important?",
-            "option_a": "A tree where all leaves have the same value, which makes tree traversals trivial.",
-            "option_b": "A tree where the heights of the left and right subtrees of any node differ by at most one, ensuring logarithmic operations.",
-            "option_c": "A tree where every node has exactly zero or two children.",
-            "option_d": "A tree with no empty nodes, which saves memory.",
-            "correct_answer": "B",
-            "explanation": "A balanced binary tree (e.g., AVL tree, Red-Black tree) keeps its height at O(log N). This is important because the time complexity of operations like search, insertion, and deletion depend on height. Balancing guarantees O(log N) worst-case performance."
-        },
+        # Medium (10 Questions)
+        ("Python Programming", "Medium", "What does the __init__ method do in a Python class?", "It deletes an instance of the class.", "It initializes a class-level variable.", "It acts as a constructor to initialize a newly created object's state.", "It imports the module defining the class.", "C", "The __init__ method is a special method (dunder method) in Python classes that acts as a constructor, executing automatically when a new instance is initialized."),
+        ("Python Programming", "Medium", "Which list comprehension correctly filters even numbers from range(10)?", "[x if x % 2 == 0 for x in range(10)]", "[x for x in range(10) if x % 2 == 0]", "[x for x % 2 == 0 in range(10)]", "[if x % 2 == 0: x for x in range(10)]", "B", "The standard syntax for a filtered list comprehension is [expression for item in iterable if condition]."),
+        ("Python Programming", "Medium", "What is the output of the string slicing expression \"hello\"[::-1]?", "hello", "olleh", "h", "o", "B", "The slice syntax is [start:stop:step]. A step of -1 reverses the string, producing 'olleh'."),
+        ("Python Programming", "Medium", "Which method adds an element to the end of a list in Python?", "add()", "insert()", "append()", "push()", "C", "The 'append()' method appends a single item to the end of a list. 'insert()' adds an item at a specific index."),
+        ("Python Programming", "Medium", "Which keyword block is used to handle exceptions in Python?", "try / catch", "try / except", "try / handle", "throw / catch", "B", "Python uses 'try' and 'except' blocks for exception handling. Other languages like Java or C++ use 'try' and 'catch'."),
+        ("Python Programming", "Medium", "How do you merge two dictionaries 'dict1' and 'dict2' in Python 3.9+?", "dict1.add(dict2)", "dict1 + dict2", "dict1 | dict2", "dict1.merge(dict2)", "C", "Python 3.9 introduced the merge operator (|) for dictionaries, allowing dict1 | dict2 to produce a new merged dictionary."),
+        ("Python Programming", "Medium", "What does list(range(1, 5)) output?", "[1, 2, 3, 4, 5]", "[1, 2, 3, 4]", "[2, 3, 4, 5]", "[2, 3, 4]", "B", "The 'range(start, stop)' function generates integers from start (inclusive) to stop (exclusive). Thus, range(1, 5) generates 1, 2, 3, 4."),
+        ("Python Programming", "Medium", "What is the difference between remove() and pop() on a list?", "remove() deletes by index, pop() deletes by value", "remove() deletes by value, pop() deletes by index and returns the item", "There is no difference", "remove() works on strings, pop() works on lists", "B", "The 'remove(val)' method deletes the first occurrence of a value. The 'pop(idx)' method removes the element at the specified index and returns it."),
+        ("Python Programming", "Medium", "What does the string join() method do in Python?", "Splits a string into a list", "Concatenates elements of an iterable with a separator string", "Checks if a string ends with a suffix", "Replaces characters inside a string", "B", "The 'join()' method takes an iterable of strings and joins them together using the string on which it was called as the separator."),
+        ("Python Programming", "Medium", "Which statement immediately exits the innermost loop in Python?", "continue", "pass", "exit", "break", "D", "The 'break' statement terminates the loop loop immediately, skipping any remaining code in the loop block."),
 
-        # --- WEB DEVELOPMENT ---
-        {
-            "category": "Web Development",
-            "difficulty": "Easy",
-            "question_text": "What does HTML stand for?",
-            "option_a": "HyperText Markup Language",
-            "option_b": "HighText Machine Language",
-            "option_c": "HyperTransfer Markup Layout",
-            "option_d": "HyperLink and Text Markup Language",
-            "correct_answer": "A",
-            "explanation": "HTML stands for HyperText Markup Language. It is the standard markup language used to structure documents and pages for display in a web browser."
-        },
-        {
-            "category": "Web Development",
-            "difficulty": "Easy",
-            "question_text": "Which CSS property is used to change the text color of an element?",
-            "option_a": "background-color",
-            "option_b": "font-color",
-            "option_c": "text-color",
-            "option_d": "color",
-            "correct_answer": "D",
-            "explanation": "In CSS, the 'color' property is used to specify the text color of an element. The 'background-color' property sets the background color of the element."
-        },
-        {
-            "category": "Web Development",
-            "difficulty": "Medium",
-            "question_text": "What is the difference between 'display: none' and 'visibility: hidden' in CSS?",
-            "option_a": "'display: none' keeps the space in the layout, while 'visibility: hidden' removes it.",
-            "option_b": "'display: none' removes the element from the layout flow, whereas 'visibility: hidden' hides the element but keeps its space in the layout.",
-            "option_c": "There is no difference; they are aliases for the same visual behavior.",
-            "option_d": "'display: none' only works on block elements; 'visibility: hidden' only works on inline elements.",
-            "correct_answer": "B",
-            "explanation": "'display: none' renders nothing and removes the element completely from the document flow (other elements collapse into its space). 'visibility: hidden' makes the element invisible, but it still takes up its original space and affects layout positioning."
-        },
-        {
-            "category": "Web Development",
-            "difficulty": "Medium",
-            "question_text": "What does the 'box-sizing: border-box' CSS rule do?",
-            "option_a": "It hides the borders of an element.",
-            "option_b": "It includes padding and border in the element's total declared width and height.",
-            "option_c": "It forces borders to remain inside circular elements.",
-            "option_d": "It excludes padding and borders, making elements wider than their specified width.",
-            "correct_answer": "B",
-            "explanation": "By default, browsers calculate size as 'content-box' (width/height + padding + border). 'border-box' tells the browser to include padding and border within the specified width and height, which makes sizing grid structures much easier."
-        },
-        {
-            "category": "Web Development",
-            "difficulty": "Hard",
-            "question_text": "What is the purpose of the 'defer' attribute in an HTML <script> tag?",
-            "option_a": "It prevents the script from executing until the user clicks on the page.",
-            "option_b": "It downloads the script asynchronously and executes it immediately, blocking document parsing.",
-            "option_c": "It downloads the script in parallel and executes it only after the HTML document has been fully parsed.",
-            "option_d": "It compiles the JavaScript code using a WebAssembly compiler.",
-            "correct_answer": "C",
-            "explanation": "The 'defer' attribute specifies that the script is executed after the document parsing is complete. The script is downloaded in parallel (asynchronously), but execution is deferred, and deferred scripts execute in the order they appear in the document."
-        },
-        {
-            "category": "Web Development",
-            "difficulty": "Hard",
-            "question_text": "In CSS Flexbox, what does the 'flex-grow' property define?",
-            "option_a": "It specifies how much a flex item will grow relative to the rest of the flex items when positive free space is available.",
-            "option_b": "It sets the maximum physical height of a flex container.",
-            "option_c": "It forces elements to wrap onto multiple lines when they run out of space.",
-            "option_d": "It scales up fonts within a flex item when the browser zooms in.",
-            "correct_answer": "A",
-            "explanation": "'flex-grow' defines the ability of a flex item to grow if necessary. It accepts a unitless value that serves as a proportion, detailing how much of the remaining space in the flex container the item should take up relative to others."
-        },
+        # Hard (10 Questions)
+        ("Python Programming", "Hard", "What is a generator in Python, and how is it defined?", "A generator is a module that creates random numbers, defined using random.", "A generator is a function that returns an iterator using the 'yield' keyword to produce values lazily.", "A generator is a system-level process that runs Python scripts concurrently.", "A generator is another name for a lambda function.", "B", "Generators are functions that yield values one at a time on demand. They are defined like normal functions but use the 'yield' keyword to preserve state between calls."),
+        ("Python Programming", "Hard", "What is the purpose of 'self' in Python class methods?", "It is a keyword that refers to the class itself, similar to 'cls'.", "It refers to the current instance of the class, allowing access to instance attributes and methods.", "It is a security mechanism that prevents private variable modification.", "It calls the parent class constructor.", "B", "By convention, 'self' is the first parameter of any instance method, referring to the specific object instance that called the method."),
+        ("Python Programming", "Hard", "What is a decorator in Python?", "A design pattern that changes class structures dynamically.", "A function that takes another function as an argument and extends its behavior without modifying it.", "A script that formats code files automatically.", "A style attribute used in console printing.", "B", "Decorators wrap a function, modifying its behavior dynamically. They are represented by the @ symbol above function definitions."),
+        ("Python Programming", "Hard", "What is the purpose of the __slots__ declaration in Python classes?", "It secures private class methods from being called.", "It restricts dynamic attribute creation, reducing memory footprint by preventing __dict__ creation.", "It enables automatic garbage collection for instance variables.", "It defines inheritance order in multiple inheritance.", "B", "By defining __slots__ = ('attr1', 'attr2'), Python reserves space in memory only for those attributes and avoids generating a dictionary (__dict__) for each object, saving memory."),
+        ("Python Programming", "Hard", "What does the @classmethod decorator do to a method?", "It makes the method private.", "It passes the class (cls) as the first argument instead of the instance (self).", "It compiles the method to C code for optimization.", "It ensures the method cannot be overridden.", "B", "A class method is bound to the class and not the object. It receives the class itself as its first argument (usually named 'cls')."),
+        ("Python Programming", "Hard", "What is the key difference between copy.copy() and copy.deepcopy()?", "copy() only copies numbers, deepcopy() copies objects.", "copy() creates a shallow copy where nested objects are references; deepcopy() recursively copies all nested objects.", "There is no difference in modern Python.", "deepcopy() deletes the original object after copying.", "B", "A shallow copy constructs a new compound object and inserts references to the original nested objects. A deep copy recursively duplicates nested elements."),
+        ("Python Programming", "Hard", "What is the Global Interpreter Lock (GIL) in Python?", "A security firewall preventing unauthorized access to python scripts.", "A mutex that protects access to Python objects, preventing multiple threads from executing Python bytecodes at once.", "A syntax parser lock that blocks execution on compilation errors.", "A package manager feature locking library versions.", "B", "The GIL is a mutex in CPython that ensures only one thread executes Python bytecode at a time, limiting CPU-bound multi-threaded performance but keeping memory management safe and simple."),
+        ("Python Programming", "Hard", "In Python function signatures, what do *args and **kwargs stand for?", "*args collects keyword arguments as a dictionary; **kwargs collects positional arguments as a tuple.", "*args collects variable positional arguments as a tuple; **kwargs collects variable keyword arguments as a dictionary.", "They represent pointers to memory blocks.", "They force parameters to be strictly typed.", "B", "*args allows passing a variable number of positional arguments which are packed into a tuple; **kwargs allows variable keyword arguments packed into a dictionary."),
+        ("Python Programming", "Hard", "What is a lambda function in Python?", "A function that executes inside a separate CPU core.", "An anonymous, single-line expression function defined using the 'lambda' keyword.", "A method that loops indefinitely.", "A system utility to clean up variables.", "B", "Lambdas are small, anonymous, single-expression functions. They can take any number of arguments but can only have one expression, e.g., lambda x: x * 2."),
+        ("Python Programming", "Hard", "What does the built-in dir() function return when called on an object?", "The physical memory address of the object.", "A list of valid attributes and methods of that object.", "The docstring of the class definition.", "A dictionary of values stored in the object.", "B", "The 'dir()' function attempts to return a sorted list of valid attributes, properties, and methods associated with the object passed as its parameter."),
 
-        # --- DATABASE SYSTEMS ---
-        {
-            "category": "Database Systems",
-            "difficulty": "Easy",
-            "question_text": "What does SQL stand for?",
-            "option_a": "Simple Query Language",
-            "option_b": "Structured Query Language",
-            "option_c": "System Query Logic",
-            "option_d": "Server Query Layout",
-            "correct_answer": "B",
-            "explanation": "SQL stands for Structured Query Language. It is the standard language designed for managing data held in relational database management systems (RDBMS) like MySQL, PostgreSQL, SQLite, etc."
-        },
-        {
-            "category": "Database Systems",
-            "difficulty": "Easy",
-            "question_text": "Which SQL clause is used to filter records based on a specific condition?",
-            "option_a": "GROUP BY",
-            "option_b": "ORDER BY",
-            "option_c": "WHERE",
-            "option_d": "HAVING",
-            "correct_answer": "C",
-            "explanation": "The WHERE clause is used to filter records in SQL, extracting only those records that satisfy a specified condition. HAVING is used to filter groups created by GROUP BY."
-        },
-        {
-            "category": "Database Systems",
-            "difficulty": "Medium",
-            "question_text": "What is a Foreign Key in a database schema?",
-            "option_a": "A key that is encrypted for remote security access.",
-            "option_b": "A field in one table that uniquely identifies a row of another table, linking the two tables together.",
-            "option_c": "A column that cannot contain null values.",
-            "option_d": "A key that allows access from third-party client applications.",
-            "correct_answer": "B",
-            "explanation": "A Foreign Key is a column (or group of columns) in a relational database table that provides a link between data in two tables. It references the Primary Key of another table, enforcing referential integrity."
-        },
-        {
-            "category": "Database Systems",
-            "difficulty": "Medium",
-            "question_text": "What is the difference between an INNER JOIN and a LEFT JOIN in SQL?",
-            "option_a": "INNER JOIN returns all rows from both tables; LEFT JOIN only returns matching rows.",
-            "option_b": "INNER JOIN returns rows that have matching values in both tables; LEFT JOIN returns all rows from the left table, and the matched rows from the right table.",
-            "option_c": "INNER JOIN is faster but loses database records; LEFT JOIN is slower and preserves historical logs.",
-            "option_d": "LEFT JOIN is only used for numerical values; INNER JOIN is for text values.",
-            "correct_answer": "B",
-            "explanation": "An INNER JOIN selects records that have matching values in both tables. A LEFT (OUTER) JOIN selects all records from the left table, and the matched records from the right table. If there is no match, NULL values are returned for columns of the right table."
-        },
-        {
-            "category": "Database Systems",
-            "difficulty": "Hard",
-            "question_text": "In Database Systems, what do the ACID properties represent in transactions?",
-            "option_a": "Atomicity, Consistency, Isolation, Durability",
-            "option_b": "Algorithm, Concurrency, Indexing, Distribution",
-            "option_c": "Accuracy, Completeness, Integrity, Dependability",
-            "option_d": "Access, Control, Identity, Defense",
-            "correct_answer": "A",
-            "explanation": "ACID stands for Atomicity (all-or-nothing), Consistency (integrity constraints maintained), Isolation (independent concurrent executions), and Durability (committed changes are permanent). These properties guarantee that database transactions are processed reliably."
-        },
-        {
-            "category": "Database Systems",
-            "difficulty": "Hard",
-            "question_text": "What is the primary goal of Database Normalization?",
-            "option_a": "To index data to make search operations run in constant time O(1).",
-            "option_b": "To eliminate data redundancy, prevent insertion/update/deletion anomalies, and organize relationships to protect data integrity.",
-            "option_c": "To convert tables into standard JSON documents for modern NoSQL integrations.",
-            "option_d": "To backup database contents automatically every hour.",
-            "correct_answer": "B",
-            "explanation": "Database Normalization is the process of structuring a relational database in accordance with a series of normal forms (1NF, 2NF, 3NF, etc.) to minimize data redundancy, prevent update anomalies, and ensure dependencies make logical sense."
-        }
+        # ==========================================
+        # DATA STRUCTURES
+        # ==========================================
+        # Easy (10 Questions)
+        ("Data Structures", "Easy", "What is the time complexity of accessing an element in an array by its index?", "O(N)", "O(log N)", "O(1)", "O(N log N)", "C", "Since array elements are stored in contiguous memory locations, the index allows direct address calculation in O(1) constant time."),
+        ("Data Structures", "Easy", "Which data structure operates on a Last-In-First-Out (LIFO) basis?", "Queue", "Stack", "Linked List", "Binary Tree", "B", "A Stack operates on a LIFO principle, where the last element pushed is the first one to be popped."),
+        ("Data Structures", "Easy", "Which data structure operates on a First-In-First-Out (FIFO) basis?", "Queue", "Stack", "Heap", "Graph", "A", "A Queue operates on a FIFO basis, where the first element added is the first one to be removed."),
+        ("Data Structures", "Easy", "Which of the following is a linear data structure?", "Tree", "Graph", "Linked List", "Hash Table", "C", "A Linked List is a linear data structure where elements are arranged sequentially. Trees and Graphs are non-linear."),
+        ("Data Structures", "Easy", "What is the stack operation used to insert an item?", "pop", "dequeue", "push", "enqueue", "C", "The 'push' operation inserts an element onto the top of a stack, while 'pop' removes it."),
+        ("Data Structures", "Easy", "What is the queue operation used to remove an item from the front?", "enqueue", "dequeue", "push", "pop", "B", "The 'dequeue' operation removes an item from the front of a queue, and 'enqueue' adds an item to the rear."),
+        ("Data Structures", "Easy", "Which data structure is ideal for representing hierarchical parent-child relationships?", "Stack", "Queue", "Tree", "Array", "C", "A Tree data structure consists of nodes connected by edges, representing hierarchical structures like file systems."),
+        ("Data Structures", "Easy", "What is the time complexity of searching an element in a sorted array of size N using Binary Search?", "O(N)", "O(log N)", "O(N log N)", "O(1)", "B", "Binary Search divides the search space in half at each step, yielding a logarithmic time complexity of O(log N)."),
+        ("Data Structures", "Easy", "Which data structure maps keys to values for efficient search?", "Linked List", "Stack", "Hash Table", "Queue", "C", "A Hash Table uses a hash function to compute index positions for key-value storage, providing O(1) average lookup time."),
+        ("Data Structures", "Easy", "In a Linked List, what does a 'node' typically consist of?", "Data and a reference to the next node", "An index and a value", "A key and a hash code", "Left and Right pointers", "A", "A node in a singly linked list contains its data payload and a link (pointer/reference) pointing to the next node in sequence."),
+
+        # Medium (10 Questions)
+        ("Data Structures", "Medium", "In a Binary Search Tree (BST), what is the worst-case search time complexity?", "O(1)", "O(log N)", "O(N)", "O(N log N)", "C", "In the worst case (a skewed or degenerate tree acting like a linked list), you may have to traverse all N nodes. In a balanced BST, it is O(log N)."),
+        ("Data Structures", "Medium", "Which data structure is typically used to implement Breadth-First Search (BFS) in a graph?", "Stack", "Queue", "Min-Heap", "Hash Table", "B", "BFS explores nodes level-by-level, requiring a FIFO Queue to process vertices in the order they are discovered."),
+        ("Data Structures", "Medium", "Which data structure is typically used to implement Depth-First Search (DFS) in a graph?", "Queue", "Stack", "Priority Queue", "Heap", "B", "DFS explores as deep as possible before backtracking, requiring a LIFO Stack (or recursion, which uses the call stack)."),
+        ("Data Structures", "Medium", "What is the time complexity of inserting a node at the head of a Singly Linked List?", "O(1)", "O(N)", "O(log N)", "O(N log N)", "A", "Inserting at the head only requires updating the new node's next pointer to point to the current head and updating the head reference, taking constant O(1) time."),
+        ("Data Structures", "Medium", "In a Binary Max-Heap, where is the maximum element located?", "At the root node", "At the last leaf node", "In the middle level", "Distributed randomly", "A", "By heap property, a Max-Heap guarantees that parent nodes are greater than or equal to their children, positioning the maximum element at the root node."),
+        ("Data Structures", "Medium", "What is the primary memory disadvantage of a Doubly Linked List compared to a Singly Linked List?", "It requires twice as much data storage.", "Each node must store an extra pointer referencing the previous node.", "It can only store integers.", "It cannot be traversed in reverse.", "B", "Each node in a Doubly Linked List contains a 'prev' pointer alongside the 'next' pointer, increasing memory consumption per node."),
+        ("Data Structures", "Medium", "Which binary tree traversal visits nodes in: Left, Root, Right order?", "Pre-order", "Post-order", "In-order", "Level-order", "C", "In-order traversal recursively visits the Left subtree, processes the Root node, and then recursively visits the Right subtree."),
+        ("Data Structures", "Medium", "In a circular queue implemented using an array, how is the full condition checked?", "(rear + 1) % size == front", "rear == front", "rear - front == size", "rear == size - 1", "A", "To distinguish between empty and full states in a circular queue, one slot is typically left empty. Full is when the next insert index matches the front pointer."),
+        ("Data Structures", "Medium", "What is the average-case time complexity of inserting a key in a Hash Table?", "O(N)", "O(log N)", "O(1)", "O(N log N)", "C", "Assuming a good hash function that distributes keys evenly, average-case insertion runs in O(1) constant time."),
+        ("Data Structures", "Medium", "Which of the following describes a Binary Search Tree (BST)?", "Every node has exactly two children.", "A binary tree where the left child is smaller and the right child is larger than the parent node.", "A tree where leaf nodes are on the same level.", "A tree that has no duplicate elements.", "B", "A BST is structured such that for any node, all keys in its left subtree are less than its key, and all keys in its right subtree are greater."),
+
+        # Hard (10 Questions)
+        ("Data Structures", "Hard", "What is a hash collision in a Hash Table?", "When the hash function fails to compute a value.", "When two distinct keys produce the same hash value, mapping them to the same index slot.", "When the table runs out of memory.", "When elements are deleted, leaving empty memory slots.", "B", "Collisions occur when different keys hash to the same index. They are resolved via Chaining (linked lists) or Open Addressing (probing)."),
+        ("Data Structures", "Hard", "What is a balanced binary tree, and why is it important?", "A tree where every node has exactly two children, keeping memory clear.", "A tree where heights of left and right subtrees of any node differ by at most one, guaranteeing O(log N) operations.", "A tree with no empty slots, which saves memory.", "A tree where left subtree values are negative and right values are positive.", "B", "Balancing ensures tree height is kept at logarithmic O(log N), preventing operations (search, insert, delete) from degrading to linear O(N)."),
+        ("Data Structures", "Hard", "What is the time complexity of building a Binary Heap of size N from an unsorted array?", "O(N log N)", "O(N)", "O(N^2)", "O(log N)", "B", "Using the bottom-up Floyd's Heap Construction algorithm (heapify), we can build a heap in linear O(N) time."),
+        ("Data Structures", "Hard", "What is a Trie data structure primarily used for?", "Sorting floating-point numbers.", "Fast string retrieval and prefix matching.", "Finding shortest paths in graphs.", "Storing relational tables.", "B", "A Trie (prefix tree) stores strings where nodes represent characters, allowing fast autocomplete, dictionary lookups, and prefix searches."),
+        ("Data Structures", "Hard", "In Graph Theory, what is a Directed Acyclic Graph (DAG)?", "A graph where all edges are bidirectional.", "A graph with directed edges and no directed cycles.", "A graph that cannot be drawn on a plane without crossing lines.", "A graph where every node has exactly two outgoing edges.", "B", "A DAG has directed edges that go in one direction, and it is impossible to start at any node and return to it by following edge paths (no cycles)."),
+        ("Data Structures", "Hard", "Which algorithm is used to find the shortest path in a weighted graph with non-negative edge weights?", "Kruskal's Algorithm", "Floyd-Warshall Algorithm", "Dijkstra's Algorithm", "Prim's Algorithm", "C", "Dijkstra's algorithm finds single-source shortest paths in O((V + E) log V) time. Kruskal's/Prim's find Minimum Spanning Trees."),
+        ("Data Structures", "Hard", "What is an AVL Tree?", "A tree optimized for alphabetical search queries.", "A self-balancing Binary Search Tree where heights of two child subtrees of any node differ by at most one.", "A tree structure used to store graphic matrices.", "A multi-way tree optimized for database index structures.", "B", "An AVL tree is a self-balancing BST named after Adelson-Velsky and Landis, performing tree rotations to maintain O(log N) heights."),
+        ("Data Structures", "Hard", "What is the amortized time complexity of appending an element to a dynamic array (like a list in Python)?", "O(N)", "O(log N)", "O(1)", "O(N^2)", "C", "While resizing/copying the array takes O(N) when full, it occurs rarely. Appending takes O(1) amortized constant time over many operations."),
+        ("Data Structures", "Hard", "What does path compression do in a Disjoint Set Union (DSU) / Union-Find structure?", "It deletes isolated components to save memory.", "It flattens the tree structure by pointing visited nodes directly to the root, speeding up subsequent queries.", "It finds the shortest path between two nodes in a graph.", "It sorts the sets alphabetically.", "B", "Path compression optimizes the Find operation in DSU. By pointing nodes directly to root, find queries approach nearly O(1) time complexity."),
+        ("Data Structures", "Hard", "What is a B-Tree, and where is it commonly used?", "A tree containing binary data, used in compilers.", "A self-balanced, multi-way search tree optimized for systems that read/write large blocks of data, widely used in databases and filesystems.", "A tree optimized for alphabetical dictionary storage.", "A binary tree that stores boolean values.", "B", "B-Trees keep keys in sorted order for sequential traversals and allow logarithmic operations. They support multi-way children, minimizing disk reads."),
+
+        # ==========================================
+        # WEB DEVELOPMENT
+        # ==========================================
+        # Easy (10 Questions)
+        ("Web Development", "Easy", "What does HTML stand for?", "HyperText Markup Language", "HighText Machine Language", "HyperTransfer Markup Layout", "HyperLink and Text Markup Language", "A", "HTML stands for HyperText Markup Language, the standard code structure for web pages."),
+        ("Web Development", "Easy", "Which CSS property changes the text color of an HTML element?", "background-color", "font-color", "text-color", "color", "D", "The 'color' property sets text color in CSS, whereas 'background-color' sets background color."),
+        ("Web Development", "Easy", "Which HTML tag is used to define the most important, largest heading?", "<h6>", "<heading>", "<h1>", "<head>", "C", "HTML headings range from <h1> (most important/largest) to <h6> (least important/smallest)."),
+        ("Web Development", "Easy", "Which HTML element is used to create a hyperlink?", "<link>", "<a>", "<href>", "<url>", "B", "The anchor tag <a> is used to create hyperlinks, with the 'href' attribute specifying the target URL."),
+        ("Web Development", "Easy", "Which HTML tag creates a single line break in a text paragraph?", "<lb>", "<break>", "<br>", "<p>", "C", "The <br> tag is an empty (self-closing) element that inserts a single line break."),
+        ("Web Development", "Easy", "In CSS, what selector symbol is used to select an element with a specific ID?", "#", ".", "*", "@", "A", "The hash (#) symbol selects elements by ID, and the dot (.) selects elements by class name."),
+        ("Web Development", "Easy", "In CSS, what selector symbol selects elements belonging to a specific class?", "#", ".", "*", "class=", "B", "The dot (.) represents a class selector in CSS styles (e.g., .active selects all elements with class=\"active\")."),
+        ("Web Development", "Easy", "Which HTML element defines an unordered, bulleted list?", "<ol>", "<li>", "<ul>", "<list>", "C", "The <ul> tag defines an unordered (bulleted) list. <ol> defines an ordered (numbered) list, and <li> is a list item."),
+        ("Web Development", "Easy", "Which HTML attribute provides alternate text for an image if it cannot load?", "title", "alt", "src", "desc", "B", "The 'alt' attribute provides alternative text description for screen readers and acts as a placeholder if the image fails to load."),
+        ("Web Development", "Easy", "Which CSS property is used to make text bold?", "font-style", "text-decoration", "font-weight", "text-style", "C", "The 'font-weight' property sets the boldness of fonts (e.g., font-weight: bold or font-weight: 700)."),
+
+        # Medium (10 Questions)
+        ("Web Development", "Medium", "What is the difference between 'display: none' and 'visibility: hidden' in CSS?", "'display: none' keeps the space in layout; 'visibility: hidden' removes it.", "'display: none' removes the element from document flow; 'visibility: hidden' hides it but keeps its layout space.", "There is no difference.", "display: none only works on images; visibility: hidden only works on text.", "B", "'display: none' renders nothing and collapses the space. 'visibility: hidden' makes the element invisible, but it still takes up its original space."),
+        ("Web Development", "Medium", "What does the 'box-sizing: border-box' CSS rule do?", "It hides the borders of an element.", "It includes padding and border in the element's total declared width and height.", "It forces borders to remain inside circular elements.", "It excludes padding and borders, making elements wider than their specified width.", "B", "Under border-box, the declared width and height include padding and borders, making layout grids much easier to calculate."),
+        ("Web Development", "Medium", "Which CSS Flexbox property aligns items along the container's main axis?", "align-items", "justify-content", "align-content", "flex-direction", "B", "'justify-content' aligns flex items along the main axis. 'align-items' aligns them along the cross axis."),
+        ("Web Development", "Medium", "Which CSS Flexbox property aligns items along the container's cross axis?", "justify-content", "align-items", "flex-wrap", "align-self", "B", "'align-items' controls alignment along the cross axis (orthogonal to the main axis)."),
+        ("Web Development", "Medium", "What is the primary difference between localStorage and sessionStorage in browsers?", "localStorage stores data on the server; sessionStorage stores it locally.", "localStorage data has no expiration date; sessionStorage data is cleared when the page session/tab ends.", "localStorage can only store strings; sessionStorage stores arrays.", "sessionStorage is secure, localStorage is unencrypted.", "B", "Both store key-value pairs locally. localStorage persists indefinitely until cleared, while sessionStorage is wiped when the tab is closed."),
+        ("Web Development", "Web Development", "Which HTML5 semantic element is used to contain navigation links?", "<nav>", "<section>", "<header>", "<aside>", "A", "The <nav> tag is specifically designed to contain navigation links, improving accessibility and SEO."),
+        ("Web Development", "Medium", "Which CSS position property positions an element relative to the browser viewport?", "relative", "absolute", "static", "fixed", "D", "An element with position: fixed is positioned relative to the viewport, meaning it stays in the same place even when the page is scrolled."),
+        ("Web Development", "Medium", "What does the CSS Grid rule 'grid-template-columns: repeat(3, 1fr)' do?", "Creates three columns of 100px each.", "Creates three equal-width columns sharing the available grid container space.", "Repeats a style three times.", "Specifies three borders on grid cells.", "B", "The repeat(3, 1fr) notation creates 3 columns, each taking up 1 fractional unit (1fr) of the container's free space."),
+        ("Web Development", "Medium", "Which HTML element contains metadata about the page (such as links to stylesheets)?", "<body>", "<meta>", "<head>", "<html>", "C", "The <head> element contains machine-readable metadata, title, script references, and stylesheet links, which are not displayed directly."),
+        ("Web Development", "Medium", "What is the default display value of a <div> element?", "inline", "block", "inline-block", "flex", "B", "By default, <div> is a block-level element, meaning it starts on a new line and stretches to fill the container width."),
+
+        # Hard (10 Questions)
+        ("Web Development", "Hard", "What is the purpose of the 'defer' attribute in an HTML <script> tag?", "It prevents the script from executing until clicked.", "It downloads the script in parallel and executes it only after the HTML document is fully parsed, preserving script order.", "It executes the script in a separate browser thread.", "It delays execution by a specific number of milliseconds.", "B", "Script deferring executes script blocks after document parsing is done, in the order they are defined, avoiding render-blocking behavior."),
+        ("Web Development", "Hard", "In CSS Flexbox, what does the 'flex-grow' property define?", "It specifies how much a flex item will grow relative to others when positive free space is available.", "It sets the maximum physical height of a container.", "It forces elements to wrap onto multiple lines.", "It scales up fonts within a flex item.", "A", "The 'flex-grow' property is a unitless proportion factor that dictates how much of the remaining container space the item should absorb."),
+        ("Web Development", "Hard", "What is Cross-Origin Resource Sharing (CORS) in web architectures?", "A package manager for secure JS scripts.", "A browser security mechanism that restricts or allows web pages to request resources from a domain different from their own.", "A method to load stylesheets faster.", "A protocol to encrypt database traffic.", "B", "CORS is an HTTP-header based mechanism that allows servers to indicate any origins (domain, scheme, or port) other than its own from which a browser should permit loading of resources."),
+        ("Web Development", "Hard", "What is the Event Loop in JavaScript?", "A loop that counts iterations in asynchronous arrays.", "A mechanism that orchestrates asynchronous code execution by pushing callbacks to the call stack when it is empty.", "A security loop checking code validity.", "A browser routing mechanism.", "B", "JS is single-threaded. The Event Loop monitors the call stack and callback task queues. If the stack is empty, it pushes the first task from the queue to the stack for execution."),
+        ("Web Development", "Hard", "In CSS styling, how is selector Specificity calculated?", "By counting the total lines of CSS code.", "By weight scoring: inline styles, ID selectors, class/pseudo-class selectors, and element/pseudo-element selectors.", "By sorting selectors alphabetically.", "By prioritizing the stylesheet defined last.", "B", "Specificity is a weight category applied to CSS declarations. It is represented as (inline, ID, class, element). Inline styles have the highest weight, followed by IDs, then classes, then elements."),
+        ("Web Development", "Hard", "What is a Progressive Web App (PWA)?", "An app that displays compilation progress bars.", "A website built with modern APIs (like service workers and manifests) that can be installed on devices and run offline.", "A native application written in Python.", "A website optimized for screen reader audio.", "B", "PWAs leverage modern browser technologies to offer app-like capabilities (like offline caching, push notifications, and homescreen installation) directly from a website."),
+        ("Web Development", "Hard", "What is the Document Object Model (DOM) in web browsers?", "A database schema used by local client storage.", "A programming interface that represents HTML documents as a node-link tree, allowing scripts to dynamically modify page structure.", "A framework for server routing.", "A styling standard for design layouts.", "B", "The DOM represents the page structure as objects. Languages like JS use this tree structure to dynamically alter elements, attributes, styles, and events."),
+        ("Web Development", "Hard", "Why should you use the rel=\"noopener noreferrer\" attribute on target=\"_blank\" anchor links?", "To improve the page's SEO score on search engines.", "A security measure preventing the opened page from controlling the parent window (window.opener) or leaking referrers.", "To force the browser to compress download sizes.", "To apply global fonts to the opened page.", "B", "Without it, the opened page has window access to your tab via window.opener, allowing malicious sites to redirect your parent tab to a phishing clone."),
+        ("Web Development", "Hard", "In HTTP response protocol, what does a status code in the 3xx range indicate?", "Success (e.g., 200 OK)", "Redirection (e.g., 301 Moved Permanently)", "Client Error (e.g., 404 Not Found)", "Server Error (e.g., 500 Internal Error)", "B", "HTTP status codes in the 3xx range indicate that the client must take additional action (usually a redirect redirect) to complete the request."),
+        ("Web Development", "Hard", "In CSS Grid layouts, what does the grid-area property do?", "Sets the background color of the grid.", "Specifies a grid item's size and location in a grid by referencing named grid areas or specific grid lines.", "Defines margins inside grid columns.", "Scales grid containers relative to the screen width.", "B", "The 'grid-area' property can be used as a shorthand for grid-row-start, grid-column-start, grid-row-end, and grid-column-end, or to assign a name to an item to position it using grid-template-areas."),
+
+        # ==========================================
+        # DATABASE SYSTEMS
+        # ==========================================
+        # Easy (10 Questions)
+        ("Database Systems", "Easy", "What does SQL stand for?", "Simple Query Language", "Structured Query Language", "System Query Logic", "Server Query Layout", "B", "SQL stands for Structured Query Language, the ANSI standard language for managing relational databases."),
+        ("Database Systems", "Easy", "Which SQL clause is used to filter records based on a condition?", "GROUP BY", "ORDER BY", "WHERE", "HAVING", "C", "The WHERE clause filters rows in SQL queries. HAVING filters groups, and ORDER BY sorts them."),
+        ("Database Systems", "Easy", "Which SQL command is used to insert data into a database table?", "ADD ROW", "INSERT INTO", "UPDATE", "CREATE", "B", "The 'INSERT INTO' statement adds new rows of data into a table. 'UPDATE' modifies existing rows."),
+        ("Database Systems", "Easy", "Which SQL command deletes all rows from a table without deleting the table structure?", "DROP TABLE", "DELETE ROW", "TRUNCATE", "REMOVE", "C", "The TRUNCATE command deletes all rows from a table, resetting auto-increment counters, while keeping the columns and schema intact. DROP removes the table completely."),
+        ("Database Systems", "Easy", "Which SQL constraint ensures that all values in a column are unique?", "PRIMARY KEY", "NOT NULL", "UNIQUE", "FOREIGN KEY", "C", "The UNIQUE constraint ensures that all values in a column are distinct. Primary keys are unique but also forbid NULL values."),
+        ("Database Systems", "Easy", "Which SQL keyword is used to sort the result-set of a query?", "SORT BY", "ORDER BY", "GROUP BY", "ARRANGE BY", "B", "The 'ORDER BY' clause sorts results in ascending (default) or descending order."),
+        ("Database Systems", "Easy", "By default, in what order does the SQL ORDER BY clause sort records?", "Ascending", "Descending", "Random", "By entry date", "A", "ORDER BY sorts results in ascending order by default. Use DESC to sort in descending order."),
+        ("Database Systems", "Easy", "Which SQL aggregate function returns the total number of rows matching query criteria?", "SUM()", "COUNT()", "TOTAL()", "MAX()", "B", "The 'COUNT()' function returns the number of rows that match a specified criteria."),
+        ("Database Systems", "Easy", "Which SQL keyword is used to retrieve data from a database?", "FETCH", "GET", "SELECT", "QUERY", "C", "The 'SELECT' statement is used to query data from a database table or view."),
+        ("Database Systems", "Easy", "What is a database table?", "A spreadsheet stored on the desktop.", "A collection of related data entries structured in columns and rows.", "A file system containing code modules.", "A key-value cache running in memory.", "B", "In relational databases, a table (or relation) organizes data into rows (records) and columns (attributes)."),
+
+        # Medium (10 Questions)
+        ("Database Systems", "Medium", "What is a Foreign Key in a database schema?", "A key encrypted for remote security access.", "A column in one table that links to another table by referencing its Primary Key.", "A key that forbids null values.", "A key that allows database backup exports.", "B", "A Foreign Key establishes a relationship between two tables, ensuring referential integrity by linking to a primary key in a parent table."),
+        ("Database Systems", "Medium", "What is the difference between an INNER JOIN and a LEFT JOIN in SQL?", "INNER JOIN returns all rows from both tables; LEFT JOIN only returns matching rows.", "INNER JOIN returns rows with matching values in both tables; LEFT JOIN returns all rows from the left table and matching rows from the right.", "There is no difference in speed.", "LEFT JOIN is only used for numbers.", "B", "INNER JOIN selects records that have matching keys in both tables. LEFT JOIN fetches all records from the left table, and matching records from the right, filling missing matches with NULLs."),
+        ("Database Systems", "Medium", "Which SQL clause is used to combine rows that have the same values into summary rows?", "ORDER BY", "GROUP BY", "HAVING", "JOIN", "B", "The GROUP BY statement groups rows that have the same values into summary rows, e.g., finding the number of customers in each country."),
+        ("Database Systems", "Medium", "What is the difference between WHERE and HAVING in SQL?", "WHERE filters rows before grouping; HAVING filters groups after GROUP BY.", "HAVING filters rows before grouping; WHERE filters groups after GROUP BY.", "WHERE is for numbers; HAVING is for text.", "There is no functional difference.", "A", "WHERE filters individual rows before they are grouped. HAVING is used to filter aggregated data generated by a GROUP BY clause."),
+        ("Database Systems", "Medium", "Which index type is created automatically when a Primary Key is defined in MySQL?", "Non-Clustered Index", "Clustered Index", "Hash Index", "Spatial Index", "B", "MySQL's InnoDB engine automatically creates a Clustered Index on the primary key, organizing the physical data rows on disk in primary key order."),
+        ("Database Systems", "Medium", "What does the SQL LIKE operator search for?", "Exactly equal values.", "A specified text pattern in a column using wildcards.", "Null values.", "Range of numbers.", "B", "The LIKE operator is used in a WHERE clause to search for a specified pattern in a column, utilizing wildcards like % and _."),
+        ("Database Systems", "Medium", "What does the wildcard '%' represent in a SQL LIKE pattern?", "Exactly one character.", "Zero, one, or multiple characters.", "Only numbers.", "Case-insensitive searches.", "B", "In SQL LIKE operations, the percent (%) wildcard matches any string of zero or more characters. The underscore (_) matches exactly one character."),
+        ("Database Systems", "Medium", "Which MySQL data type is best suited for storing variable-length text up to 255 characters?", "CHAR(255)", "VARCHAR(255)", "TEXT", "BLOB", "B", "VARCHAR is a variable-length character string. Unlike CHAR, it only consumes memory for the characters stored plus one or two bytes for length info, saving space."),
+        ("Database Systems", "Medium", "What does the DISTINCT keyword do in a SELECT statement?", "Sorts results in unique order.", "Removes duplicate values from the output list.", "Speeds up queries by bypassing tables.", "Filters out NULL values.", "B", "The DISTINCT keyword filters out duplicate rows from the query results, returning only unique values."),
+        ("Database Systems", "Medium", "What is database normalization?", "Backing up tables to prevention data loss.", "Structuring a database to reduce data redundancy, anomalies, and improve data integrity.", "Converting tables into JSON files.", "Optimizing index files for quick reading.", "B", "Normalization organizes tables and columns to ensure dependencies make sense and to minimize duplicate data fields."),
+
+        # Hard (10 Questions)
+        ("Database Systems", "Hard", "In Database Systems, what do the ACID properties represent in transactions?", "Atomicity, Consistency, Isolation, Durability", "Algorithm, Concurrency, Indexing, Distribution", "Accuracy, Completeness, Integrity, Dependability", "Access, Control, Identity, Defense", "A", "ACID guarantees database transactions are processed reliably: Atomicity (all-or-nothing), Consistency (rules/constraints met), Isolation (independent concurrency), and Durability (saved changes persist)."),
+        ("Database Systems", "Hard", "What is the primary goal of Database Normalization?", "To index data to run search in constant time O(1).", "To eliminate redundancy, prevent insertion/deletion/update anomalies, and protect data integrity.", "To convert tables to NoSQL documents.", "To backup data automatically.", "B", "Normalization structures databases in normal forms (1NF, 2NF, 3NF, etc.) to minimize duplicate fields and protect relational integrity."),
+        ("Database Systems", "Hard", "What is the difference between a Clustered and a Non-Clustered index?", "Clustered index defines the physical order of data storage; Non-clustered index stores index pointers in a separate structure.", "Clustered index is slower than Non-clustered.", "You can have multiple Clustered indexes on one table, but only one Non-clustered.", "Clustered index stores data in memory.", "A", "A table can only have one Clustered index because data rows can only be sorted physically in one order. You can have many Non-clustered indexes, which act like book indexes pointing to data rows."),
+        ("Database Systems", "Hard", "What is the purpose of Database Sharding?", "To encrypt database backups.", "To horizontally partition a database across multiple physical servers to distribute load and improve performance.", "To merge multiple tables into one single table.", "To automatically index all columns.", "B", "Sharding breaks up a large database into smaller, faster, more manageable chunks (shards) across multiple machines, improving horizontal scalability."),
+        ("Database Systems", "Hard", "Explain the 'Serializable' isolation level in ACID transactions.", "It allows transactions to read uncommitted data.", "The highest isolation level, ensuring concurrent transactions behave as if executed sequentially, completely preventing phantom reads.", "It serializes database objects to JSON strings.", "It locks the entire database, preventing all write operations.", "B", "Serializable is the highest isolation level. It prevents dirty reads, non-repeatable reads, and phantom reads by locking ranges of rows, making concurrent transactions appear sequential."),
+        ("Database Systems", "Hard", "What is a Database View, and what is its main advantage?", "A table stored in memory, making reads faster.", "A virtual table based on a SELECT query, simplifying complex queries and adding security restriction layers.", "A GUI application to inspect tables.", "An index created on multiple columns.", "B", "A View is a saved query that behaves like a table. It simplifies database complexity for users and can restrict access to specific rows or columns for security."),
+        ("Database Systems", "Hard", "What is a Deadlock in Database Systems?", "A database crash caused by power loss.", "A situation where two or more transactions are blocked indefinitely, each waiting for locks held by the other.", "A corrupted index file that stops query execution.", "When a query returns zero results.", "B", "A deadlock occurs when Transaction A holds a lock on Resource 1 and wants a lock on Resource 2, while Transaction B holds a lock on Resource 2 and wants a lock on Resource 1. Neither can proceed."),
+        ("Database Systems", "Hard", "What does the SQL command GRANT do?", "Grants a user connection to the server.", "Grants privileges/permissions to a database user for specific tables or schemas.", "Allocates physical storage memory.", "Allows tables to be merged.", "B", "The DCL (Data Control Language) command 'GRANT' allocates specific database permissions (SELECT, INSERT, UPDATE, etc.) to database users."),
+        ("Database Systems", "Hard", "In a relational database, what is Referential Integrity?", "Ensuring query execution speeds are fast.", "Enforcing that relationships between tables remain consistent, usually managed via foreign key constraints.", "Encrypting reference keys.", "Validating input text lengths.", "B", "Referential integrity ensures that any foreign key value must point to a valid, existing primary key in the referenced parent table, preventing orphaned records."),
+        ("Database Systems", "Hard", "What is a Database Trigger?", "A button in the GUI to execute queries.", "A stored procedure that automatically runs when a specific event (INSERT, UPDATE, DELETE) occurs on a table.", "An alarm indicating database disk is full.", "A key that links tables together.", "B", "A Trigger is event-driven code that executes automatically in response to database changes, helping enforce complex constraints or audit logging.")
     ]
-    
+
     added_count = 0
-    for q_info in questions_data:
-        cat = categories.get(q_info["category"])
+    for category_name, difficulty, q_text, opt_a, opt_b, opt_c, opt_d, correct, explanation in raw_questions:
+        cat = categories.get(category_name)
         if not cat:
-            print(f"Skipping question, category not found: {q_info['category']}")
+            print(f"Skipping question, category not found: {category_name}")
             continue
             
         # Check if question text already exists in category
         existing_q = Question.query.filter_by(
             category_id=cat.id, 
-            question_text=q_info["question_text"]
+            question_text=q_text
         ).first()
         
         if not existing_q:
             q = Question(
                 category_id=cat.id,
-                question_text=q_info["question_text"],
-                option_a=q_info["option_a"],
-                option_b=q_info["option_b"],
-                option_c=q_info["option_c"],
-                option_d=q_info["option_d"],
-                correct_answer=q_info["correct_answer"],
-                explanation=q_info["explanation"],
-                difficulty=q_info["difficulty"]
+                question_text=q_text,
+                option_a=opt_a,
+                option_b=opt_b,
+                option_c=opt_c,
+                option_d=opt_d,
+                correct_answer=correct,
+                explanation=explanation,
+                difficulty=difficulty
             )
             db.session.add(q)
             added_count += 1
-        else:
-            # Optionally update fields if they changed
-            pass
 
     db.session.commit()
     print(f"Successfully seeded {added_count} new questions!")
